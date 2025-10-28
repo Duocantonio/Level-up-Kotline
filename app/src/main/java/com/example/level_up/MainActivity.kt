@@ -13,8 +13,11 @@ import com.example.level_up.navigation.Screen
 import com.example.level_up.ui.theme.LevelUpTheme
 import com.example.level_up.uiscreen.HomeScreen // Asegúrate de importar tus pantallas
 import com.example.level_up.uiscreen.ProfileScreen
+import com.example.level_up.uiscreen.RegistroScreen
+import com.example.level_up.uiscreen.ResumenScreen
 import com.example.level_up.uiscreen.SettingsScreen
 import com.example.level_up.viewmodels.MainViewModel
+import com.example.level_up.viewmodels.UsuarioViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +27,7 @@ class MainActivity : ComponentActivity() {
             LevelUpTheme {
                 val viewModel: MainViewModel = viewModel()
                 val navController = rememberNavController()
+                val usuarioViewModel: UsuarioViewModel= viewModel()
 
                 // Escucha los eventos de navegación emitidos por el ViewModel
                 LaunchedEffect(key1 = Unit) {
@@ -63,10 +67,20 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(navController = navController, viewModel = viewModel)
                     }
                     composable(route = Screen.Profile.route) {
-                        ProfileScreen(navController = navController, viewModel = viewModel)
+                        ProfileScreen(
+                            navController = navController,
+                            mainViewModel = viewModel,         // para navegación
+                            usuarioViewModel = usuarioViewModel // para datos del usuario
+                        )
                     }
                     composable(route = Screen.Setitings.route) {
                         SettingsScreen(navController = navController, viewModel = viewModel)
+                    }
+                    composable(route = Screen.Register.route){
+                        RegistroScreen(navController, usuarioViewModel)
+                    }
+                    composable(route = Screen.Resume.route){
+                        ResumenScreen(usuarioViewModel)
                     }
                 }
             }
