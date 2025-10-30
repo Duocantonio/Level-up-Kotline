@@ -2,7 +2,7 @@ package com.example.level_up.navigation
 
 sealed class Screen (val route: String) {
 
-
+    data object Main : Screen("main_screen")
 
     data object Home : Screen("home_page")
 
@@ -17,12 +17,5 @@ sealed class Screen (val route: String) {
             return route.replace("{itemId}", itemId)
         }
     }
-
-
-
-
-
-
-
 
 }
