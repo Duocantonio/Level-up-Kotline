@@ -70,13 +70,7 @@ fun HomeScreen(
                 // 🔹 Este botón estaba mal colocado fuera del Column
                 Button(onClick = { viewModel.navigateTo(Screen.Register) }) {
                     Text("Ir al Registro")
-
                 }
-
-                Button(onClick = { navController.navigate(Screen.Camera.route) }) {
-                    Text("Abrir Cámara")
-                }
-
             }
         }
     }
