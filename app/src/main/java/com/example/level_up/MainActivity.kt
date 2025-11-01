@@ -11,7 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.level_up.navigation.NavigationEvent
 import com.example.level_up.navigation.Screen
 import com.example.level_up.ui.theme.LevelUpTheme
-import com.example.level_up.uiscreen.HomeScreen // Asegúrate de importar tus pantallas
+import com.example.level_up.uiscreen.HomeScreen
+import com.example.level_up.uiscreen.ProductosScreen
 import com.example.level_up.uiscreen.ProfileScreen
 import com.example.level_up.uiscreen.RegistroScreen
 import com.example.level_up.uiscreen.ResumenScreen
@@ -81,6 +82,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Screen.Resume.route){
                         ResumenScreen(usuarioViewModel)
+                    }
+                    composable(route = Screen.Product.route) { // <- AÑADIDO
+                        ProductosScreen()
                     }
                 }
             }
