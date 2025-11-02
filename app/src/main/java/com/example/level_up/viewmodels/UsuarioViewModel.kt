@@ -1,6 +1,9 @@
 package com.example.level_up.viewmodels
 
 import android.util.Patterns
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.level_up.navigation.UsuarioErrores
 import com.example.level_up.navigation.UsuarioUiState
@@ -10,6 +13,9 @@ import kotlinx.coroutines.flow.update
 
 class UsuarioViewModel : ViewModel (){
     private val _estado = MutableStateFlow(UsuarioUiState())
+
+    var mostrarDialogo by mutableStateOf(false)
+        private set
 
     val estado : StateFlow<UsuarioUiState> = _estado
 
@@ -33,6 +39,10 @@ class UsuarioViewModel : ViewModel (){
 
     fun onAceptarTerminos(valor: Boolean){
         _estado.update { it.copy(aceptarTerminos = valor) }
+    }
+
+    fun cambiarMostrarDialogo(valor: Boolean) {
+        mostrarDialogo = valor
     }
 
 

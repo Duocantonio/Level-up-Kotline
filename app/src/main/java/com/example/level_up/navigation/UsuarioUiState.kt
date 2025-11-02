@@ -1,5 +1,6 @@
 package com.example.level_up.navigation
 
+
 data class UsuarioUiState (
     val nombre: String ="",
     val correo : String ="",

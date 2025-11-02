@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.level_up.navigation.Screen
 import com.example.level_up.viewmodels.MainViewModel
 import com.example.level_up.viewmodels.UsuarioViewModel
 
@@ -22,7 +21,6 @@ fun ProfileScreen(
     mainViewModel: MainViewModel = viewModel(),
     usuarioViewModel: UsuarioViewModel = viewModel()
 ) {
-    // 🔹 Obtenemos el estado actual del usuario desde el ViewModel
     val estado by usuarioViewModel.estado.collectAsState()
 
     val items = listOf(Screen.Home, Screen.Profile)
@@ -76,12 +74,89 @@ fun ProfileScreen(
             Text("Datos del Usuario", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 🔹 Mostramos datos directamente del ViewModel
             Text("Nombre: ${estado.nombre}")
             Text("Correo: ${estado.correo}")
-            Text("Clave: ${estado.clave}")
+            Text("Clave: ${"*".repeat(estado.clave.length)}")
             Text("Dirección: ${estado.direccion}")
             Text("Términos aceptados: ${estado.aceptarTerminos}")
+
+            Spacer(Modifier.height(20.dp))
+
+            Button(onClick = { usuarioViewModel.cambiarMostrarDialogo(true) }) {
+                Text("Editar Perfil")
+            }
         }
+    }
+
+    if (usuarioViewModel.mostrarDialogo) {
+        var nombre by remember { mutableStateOf(estado.nombre) }
+        var correo by remember { mutableStateOf(estado.correo) }
+        var clave by remember { mutableStateOf(estado.clave) }
+        var direccion by remember { mutableStateOf(estado.direccion) }
+
+        AlertDialog(
+            onDismissRequest = { usuarioViewModel.cambiarMostrarDialogo(false) },
+            confirmButton = {
+                TextButton(onClick = {
+                    usuarioViewModel.onNombreChange(nombre)
+                    usuarioViewModel.onCorreoChange(correo)
+                    usuarioViewModel.onClaveChange(clave)
+                    usuarioViewModel.onDireccionChange(direccion)
+
+                    if (usuarioViewModel.validarFormulario()) {
+                        usuarioViewModel.cambiarMostrarDialogo(false)
+                    }
+                }) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { usuarioViewModel.cambiarMostrarDialogo(false) }) {
+                    Text("Cancelar")
+                }
+            },
+            title = { Text("Editar perfil") },
+            text = {
+                Column {
+                    TextField(
+                        value = nombre,
+                        onValueChange = { nombre = it },
+                        label = { Text("Nombre") },
+                        isError = estado.errores.nombre != null
+                    )
+                    estado.errores.nombre?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    TextField(
+                        value = correo,
+                        onValueChange = { correo = it },
+                        label = { Text("Correo") },
+                        isError = estado.errores.correo != null
+                    )
+                    estado.errores.correo?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    TextField(
+                        value = clave,
+                        onValueChange = { clave = it },
+                        label = { Text("Clave") },
+                        isError = estado.errores.clave != null
+                    )
+                    estado.errores.clave?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    TextField(
+                        value = direccion,
+                        onValueChange = { direccion = it },
+                        label = { Text("Dirección") },
+                        isError = estado.errores.direccion != null
+                    )
+                    estado.errores.direccion?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                }
+            }
+        )
     }
 }

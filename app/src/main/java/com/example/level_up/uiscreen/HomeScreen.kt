@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.level_up.navigation.Screen
 import com.example.level_up.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -61,7 +60,7 @@ fun HomeScreen(
             ) {
                 Text("Bienvenido a la página de inicio")
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { viewModel.navigateTo(Screen.Setitings) }) {
+                Button(onClick = { viewModel.navigateTo(Screen.Settings) }) {
                     Text("Ir a Configurar")
                 }
 

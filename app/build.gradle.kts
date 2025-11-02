@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -40,6 +42,19 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material:material-icons-core:1.7.2")
+    implementation("androidx.compose.material:material-icons-extended:1.7.2")
+
+
+
+    implementation("androidx.room:room-runtime:2.8.2")
+    implementation("androidx.room:room-ktx:2.8.2")
+    implementation(libs.androidx.room.ktx)
+    ksp("androidx.room:room-compiler:2.8.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
+
+
 
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.lifecycle)
