@@ -111,10 +111,11 @@ class MainActivity : ComponentActivity() {
                         ProductosScreen()
                     }
 
-                    composable(route = Screen.JuegosDeMesa.route) { JuegosDeMesaScreen() }
-                    composable(route = Screen.Perifericos.route) { PerifericosScreen() }
-                    composable(route = Screen.Computadores.route) { ComputadoresScreen() }
-                    composable(route = Screen.Consolas.route) { ConsolasScreen() }
+                    composable(route = Screen.JuegosDeMesa.route) { 
+                        JuegosDeMesaScreen(navController = navController) }
+                    composable(route = Screen.Perifericos.route) { PerifericosScreen(navController = navController) }
+                    composable(route = Screen.Computadores.route) { ComputadoresScreen(navController = navController) }
+                    composable(route = Screen.Consolas.route) { ConsolasScreen(navController = navController) }
 
                     composable(Screen.Camera.route) { WithPermission( modifier = Modifier.fillMaxSize(), permission = Manifest.permission.CAMERA ) { CameraAppScreen() } }
 
