@@ -130,7 +130,6 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     // --- Añade esta función ---
-    // Carga los datos del usuario activo en el estado del formulario
     fun cargarDatosUsuarioActivo() {
         viewModelScope.launch {
             val usuarioActivo = repository.obtenerUsuarioActivo()

@@ -53,7 +53,7 @@ fun JuegosDeMesaScreen(modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxSize()
                 .background(Color(0xFFE0F7FA))
-                .padding(innerPadding), // Aplica el padding de la barra superior
+                .padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

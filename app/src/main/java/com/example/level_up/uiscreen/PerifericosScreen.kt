@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.level_up.R
-import com.example.level_up.navigation.Screen
 import com.example.level_up.ui.theme.LevelUpTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
