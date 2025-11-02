@@ -4,8 +4,16 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM user ORDER BY id DESC")
+    @Query("SELECT * FROM users ORDER BY id DESC")
     fun getAllUsers(): Flow<List<User>>
+
+    @Query("SELECT * FROM users WHERE loggedIn = 1 LIMIT 1")
+    suspend fun obtenerUsuarioActivo(): User?
+
+    @Query("UPDATE users SET loggedIn = :estado WHERE correo = :correo")
+    suspend fun actualizarEstadoSesion(correo: String, estado: Boolean)
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)

@@ -3,7 +3,6 @@ package com.example.level_up.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.level_up.data.repository.UserRepository
-import com.example.level_up.viewmodel.UserViewModel
 
 class UserViewModelFactory(private val repository: UserRepository) :
     ViewModelProvider.Factory {

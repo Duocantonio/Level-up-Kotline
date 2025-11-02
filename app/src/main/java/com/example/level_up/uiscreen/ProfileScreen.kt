@@ -9,19 +9,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.level_up.viewmodels.MainViewModel
-import com.example.level_up.viewmodels.UsuarioViewModel
+import com.example.level_up.viewmodels.UserViewModel // <-- ¡TIPO CORRECTO!
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    mainViewModel: MainViewModel = viewModel(),
-    usuarioViewModel: UsuarioViewModel = viewModel()
+    mainViewModel: MainViewModel,
+    usuarioViewModel: UserViewModel // <-- ¡FIRMA CORREGIDA!
 ) {
     val estado by usuarioViewModel.estado.collectAsState()
+
+    // Llama a cargarDatosUsuarioActivo() solo una vez cuando la pantalla se compone
+    LaunchedEffect(Unit) {
+        usuarioViewModel.cargarDatosUsuarioActivo()
+    }
 
     val items = listOf(Screen.Home, Screen.Profile)
     var selectedItem by remember { mutableStateOf(1) }
@@ -74,16 +78,19 @@ fun ProfileScreen(
             Text("Datos del Usuario", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Muestra los datos del estado
             Text("Nombre: ${estado.nombre}")
             Text("Correo: ${estado.correo}")
             Text("Clave: ${"*".repeat(estado.clave.length)}")
             Text("Dirección: ${estado.direccion}")
-            Text("Términos aceptados: ${estado.aceptarTerminos}")
 
             Spacer(Modifier.height(20.dp))
 
             Button(onClick = { usuarioViewModel.cambiarMostrarDialogo(true) }) {
                 Text("Editar Perfil")
+            }
+            Button(onClick = {navController.navigate(Screen.Home.route)}){
+                Text("Volver al inicio")
             }
         }
     }
@@ -104,6 +111,9 @@ fun ProfileScreen(
                     usuarioViewModel.onDireccionChange(direccion)
 
                     if (usuarioViewModel.validarFormulario()) {
+
+                        usuarioViewModel.actualizarDatosUsuario()
+
                         usuarioViewModel.cambiarMostrarDialogo(false)
                     }
                 }) {
@@ -111,7 +121,10 @@ fun ProfileScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { usuarioViewModel.cambiarMostrarDialogo(false) }) {
+                TextButton(onClick = {
+                    usuarioViewModel.cambiarMostrarDialogo(false)
+                    usuarioViewModel.cargarDatosUsuarioActivo()
+                }) {
                     Text("Cancelar")
                 }
             },

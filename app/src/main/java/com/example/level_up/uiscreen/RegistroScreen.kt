@@ -21,16 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.level_up.viewmodels.UsuarioViewModel
+import com.example.level_up.viewmodels.UserViewModel // <-- Correcto
 
 @Composable
-fun RegistroScreen (
+fun RegistroScreen(
     navController: NavController,
-    viewModel: UsuarioViewModel
+    usuarioViewModel: UserViewModel // <-- Correcto
 ){
-    val estado by viewModel.estado.collectAsState()
+    val estado by usuarioViewModel.estado.collectAsState()
 
-    Column (
+    Column(
         Modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -38,9 +38,9 @@ fun RegistroScreen (
     ){
         OutlinedTextField(
             value = estado.nombre,
-            onValueChange = viewModel::onNombreChange,
+            onValueChange = usuarioViewModel::onNombreChange,
             label = { Text("Nombre") },
-            isError = estado.errores.nombre !=null,
+            isError = estado.errores.nombre != null,
             supportingText = {
                 estado.errores.nombre?.let {
                     Text(it, color = MaterialTheme.colorScheme.error)
@@ -49,14 +49,12 @@ fun RegistroScreen (
             modifier = Modifier.fillMaxWidth()
         )
 
-
-
         OutlinedTextField(
             value = estado.clave,
-            onValueChange = viewModel::onClaveChange,
+            onValueChange = usuarioViewModel::onClaveChange,
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
-            isError = estado.errores.clave !=null,
+            isError = estado.errores.clave != null,
             supportingText = {
                 estado.errores.clave?.let {
                     Text(it, color = MaterialTheme.colorScheme.error)
@@ -65,12 +63,11 @@ fun RegistroScreen (
             modifier = Modifier.fillMaxWidth()
         )
 
-
         OutlinedTextField(
             value = estado.correo,
-            onValueChange = viewModel::onCorreoChange,
+            onValueChange = usuarioViewModel::onCorreoChange,
             label = { Text("Correo") },
-            isError = estado.errores.correo !=null,
+            isError = estado.errores.correo != null,
             supportingText = {
                 estado.errores.correo?.let {
                     Text(it, color = MaterialTheme.colorScheme.error)
@@ -79,12 +76,11 @@ fun RegistroScreen (
             modifier = Modifier.fillMaxWidth()
         )
 
-
         OutlinedTextField(
             value = estado.direccion,
-            onValueChange = viewModel::onDireccionChange,
-            label = { Text("Direccion") },
-            isError = estado.errores.direccion !=null,
+            onValueChange = usuarioViewModel::onDireccionChange,
+            label = { Text("Dirección") },
+            isError = estado.errores.direccion != null,
             supportingText = {
                 estado.errores.direccion?.let {
                     Text(it, color = MaterialTheme.colorScheme.error)
@@ -93,23 +89,28 @@ fun RegistroScreen (
             modifier = Modifier.fillMaxWidth()
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically){
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = estado.aceptarTerminos,
-                onCheckedChange = viewModel::onAceptarTerminos
+                onCheckedChange = usuarioViewModel::onAceptarTerminos
             )
             Spacer(Modifier.width(8.dp))
-            Text("Acepto los terminos y condiciones")
+            Text("Acepto los términos y condiciones")
         }
 
+        // --- BOTÓN CORREGIDO ---
         Button(
             onClick = {
-                if (viewModel.validarFormulario()){
+                if (usuarioViewModel.validarFormulario()) {
+                    // ¡Paso 1: Guardar el usuario en la base de datos!
+                    usuarioViewModel.registrarUsuario()
+
+                    // Paso 2: Navegar a la pantalla de inicio
                     navController.navigate("home_page")
                 }
             },
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
             Text("Registrar")
         }
     }

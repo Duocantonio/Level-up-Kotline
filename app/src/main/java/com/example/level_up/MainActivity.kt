@@ -1,4 +1,4 @@
-package com.example.level_up // Asegúrate que el package sea el correcto
+package com.example.level_up
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,23 +9,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.navigation.NavigationEvent
-import com.example.level_up.navigation.Screen
 import com.example.level_up.ui.theme.LevelUpTheme
 import com.example.level_up.uiscreen.HomeScreen
 import com.example.level_up.uiscreen.ProfileScreen
 import com.example.level_up.uiscreen.RegistroScreen
-import com.example.level_up.uiscreen.ResumenScreen
 import com.example.level_up.uiscreen.SettingsScreen
 import com.example.level_up.viewmodels.MainViewModel
 import com.example.level_up.viewmodels.UsuarioViewModel
 import kotlinx.coroutines.flow.collectLatest
 
-// --- IMPORTS AÑADIDOS DE LA CÁMARA ---
 import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.enableEdgeToEdge
 import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -37,9 +33,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -69,7 +63,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val usuarioViewModel: UsuarioViewModel= viewModel()
 
-                // Escucha los eventos de navegación emitidos por el ViewModel
                 LaunchedEffect(key1 = Unit) {
                     viewModel.navigationEvent.collectLatest { event ->
                         when (event) {
@@ -93,10 +86,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                // NavHost es el contenedor que dibuja la pantalla actual
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Home.route // Define la pantalla inicial
+                    startDestination = Screen.Home.route
                 ) {
                     composable(route = Screen.Home.route) {
                         HomeScreen(navController = navController, viewModel = viewModel)
@@ -108,14 +100,11 @@ class MainActivity : ComponentActivity() {
                             usuarioViewModel = usuarioViewModel
                         )
                     }
-                    composable(route = Screen.Setitings.route) {
+                    composable(route = Screen.Settings.route) {
                         SettingsScreen(navController = navController, viewModel = viewModel)
                     }
                     composable(route = Screen.Register.route){
                         RegistroScreen(navController, usuarioViewModel)
-                    }
-                    composable(route = Screen.Resume.route){
-                        ResumenScreen(usuarioViewModel)
                     }
 
                     composable(route = Screen.Camera.route) {
@@ -133,7 +122,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-// --- COMPOSABLES Y FUNCIONES DE CÁMARA AÑADIDOS AL FINAL ---
 
 @Composable
 fun CameraAppScreen() {
@@ -184,7 +172,6 @@ fun CameraAppScreen() {
                     }
                     override fun onError(exception:
                                          ImageCaptureException) {
-                        // Manejar error
                     }
                 }
                 imageCaptureUseCase.takePicture(outputFileOptions,
@@ -205,12 +192,12 @@ fun CameraPreview(
 ) {
     val previewUseCase = remember {
         androidx.camera.core.Preview.Builder().build() }
-    var cameraProvider: ProcessCameraProvider? by remember { // Corregido: tipo explícito ProcessCameraProvider?
+    var cameraProvider: ProcessCameraProvider? by remember {
         mutableStateOf(null) }
-    var cameraControl: CameraControl? by remember { mutableStateOf(null) // Corregido: tipo explícito CameraControl?
+    var cameraControl: CameraControl? by remember { mutableStateOf(null)
     }
     val localContext = LocalContext.current
-    val lifecycleOwner = localContext as LifecycleOwner // Obtener LifecycleOwner
+    val lifecycleOwner = localContext as LifecycleOwner
 
     fun rebindCameraProvider() {
         cameraProvider?.let { cameraProvider ->
@@ -219,7 +206,7 @@ fun CameraPreview(
                 .build()
             cameraProvider.unbindAll()
             val camera = cameraProvider.bindToLifecycle(
-                lifecycleOwner, // Usar LifecycleOwner
+                lifecycleOwner,
                 cameraSelector,
                 previewUseCase, imageCaptureUseCase
             )
@@ -249,11 +236,8 @@ fun CameraPreview(
 }
 
 fun Uri.shareAsImage(context: Context) {
-    // --- CORRECCIÓN IMPORTANTE ---
-    // Usa la autoridad del FileProvider de "com.example.level_up"
     val contentUri = FileProvider.getUriForFile(context,
         "com.example.level_up.fileprovider", toFile())
-    // --- FIN DE LA CORRECCIÓN ---
 
     val shareIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
