@@ -71,13 +71,6 @@ fun HomeScreen(
                 Button(onClick = { viewModel.navigateTo(Screen.Register) }) {
                     Text("Ir al Registro")
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(onClick = { viewModel.navigateTo(Screen.Product) }) {
-                    Text("Ir al Productos")
-                }
-
             }
         }
     }
