@@ -27,15 +27,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.R
 import com.example.level_up.ui.theme.LevelUpTheme
+import com.example.level_up.viewmodels.CarritoViewModel
+import com.example.level_up.viewmodels.Producto
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifier, carritoViewModel: CarritoViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -47,7 +50,6 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                 Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                // Enlaces principales
                 NavigationDrawerItem(
                     label = { Text("Perfil") },
                     selected = false,
@@ -127,7 +129,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Raton Logitec",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -157,7 +160,13 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val raton_logi = Producto(
+                                        id = 14,
+                                        nombre = "raton_logi",
+                                        precio = 59900,
+                                        urlImagen = "raton_logi"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(raton_logi) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -180,7 +189,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Teclado Kurama Redragon",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -210,7 +220,14 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val mouselogi = Producto(
+                                        id = 15,
+                                        nombre = "Teclado Kumara",
+                                        precio = 79900,
+                                        urlImagen = "teclado_kurama"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(mouselogi)
+                                    },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -233,7 +250,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Auriculares Razer Kraken",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -263,7 +281,14 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val razerauri = Producto(
+                                        id = 16,
+                                        nombre = "mouse",
+                                        precio = 89900,
+                                        urlImagen = "razer_kraken"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(razerauri)
+                                    } ,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -286,7 +311,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Monitor LG 4K",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -316,7 +342,13 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val monitor = Producto(
+                                        id = 17,
+                                        nombre = "alfombrilla_razer_xxl",
+                                        precio = 29900,
+                                        urlImagen = "alfombrilla_razer_xxl"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(monitor) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -339,7 +371,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Webcam HD",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -369,7 +402,13 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val webcam = Producto(
+                                        id = 18,
+                                        nombre = "webcam_hd",
+                                        precio = 29900,
+                                        urlImagen = "webcam_hd"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(webcam)},
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -392,7 +431,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Alfombrilla Razer XXL",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -422,7 +462,13 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val alfombrilla = Producto(
+                                        id = 19,
+                                        nombre = "alfombrilla_razer_xxl",
+                                        precio = 29900,
+                                        urlImagen = "alfombrilla_razer_xxl"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(alfombrilla) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -445,7 +491,8 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 contentDescription = "Mando Xbox Series X",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(1f).clip(RoundedCornerShape(8.dp)),
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
                             )
 
@@ -475,7 +522,14 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val mando_series_x = Producto(
+                                        id = 20,
+                                        nombre = "mando_xbox_series_x",
+                                        precio = 59900,
+                                        urlImagen = "mando_xbox_series_x"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(mando_series_x)
+                                    } ,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -491,12 +545,5 @@ fun PerifericosScreen(navController: NavController, modifier: Modifier = Modifie
             }
 
         }
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun PerifericosScreenPreview() {
-    LevelUpTheme {
-        PerifericosScreen(navController = rememberNavController())
     }
 }

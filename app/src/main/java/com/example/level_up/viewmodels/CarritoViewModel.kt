@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 data class Producto(
     val id: Int,
     val nombre: String,
-    val precio: Double,
+    val precio: Int,
     val urlImagen: String = ""
 )
 
@@ -32,10 +32,10 @@ class CarritoViewModel : ViewModel() {
 
     init {
         _todosLosProductos.value = listOf(
-            Producto(1, "Teclado Gamer Pro", 89.99),
-            Producto(2, "Mouse Óptico RGB", 45.50),
-            Producto(3, "Monitor Curvo 27\"", 320.00),
-            Producto(4, "Audífonos 7.1", 110.00)
+            Producto(1, "Teclado Gamer Pro", 89999),
+            Producto(2, "Mouse Óptico RGB", 45550),
+            Producto(3, "Monitor Curvo 27\"", 320000),
+            Producto(4, "Audífonos 7.1", 110000)
         )
     }
 
@@ -45,7 +45,6 @@ class CarritoViewModel : ViewModel() {
             val itemExistente = _itemsDelCarrito.value.find { it.producto.id == producto.id }
 
             if (itemExistente != null) {
-                // Si existe: crea una NUEVA lista actualizando la cantidad
                 _itemsDelCarrito.update { listaActual ->
                     listaActual.map { item ->
                         if (item.producto.id == producto.id) {

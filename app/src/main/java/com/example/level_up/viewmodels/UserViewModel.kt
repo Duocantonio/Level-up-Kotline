@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
-    // --- Parte 1: MANEJO DE ESTADO DEL FORMULARIO (Lo que era UsuarioViewModel) ---
 
     private val _estado = MutableStateFlow(UsuarioUiState())
     val estado: StateFlow<UsuarioUiState> = _estado.asStateFlow() // <-- Usa asStateFlow()
@@ -67,12 +66,10 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
             errores.direccion
         ).isNotEmpty()
 
-        // También valida los términos y condiciones
         val terminosAceptados = estadoActual.aceptarTerminos
 
         _estado.update { it.copy(errores = errores) }
 
-        // Devuelve 'true' solo si NO hay errores Y los términos fueron aceptados
         return !hayErrores && terminosAceptados
     }
 

@@ -120,6 +120,14 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .height(50.dp)
 
+
+                Button(onClick = { navController.navigate(Screen.Cart.route) }) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Carrito"
+                    )
+                }
+
                 Button(onClick = { navController.navigate(Screen.Setitings.route) }, modifier = buttonModifier) {
                     Text("Ir a Configuración")
                 }

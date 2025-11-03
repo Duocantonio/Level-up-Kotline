@@ -31,11 +31,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.R
 import com.example.level_up.ui.theme.LevelUpTheme
+import com.example.level_up.viewmodels.CarritoViewModel
+import com.example.level_up.viewmodels.Producto
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier, carritoViewModel: CarritoViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -157,7 +159,13 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) 
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val xboxseries  = Producto(
+                                        id = 5,
+                                        nombre = "Xbox Series X",
+                                        precio = 499900,
+                                        urlImagen = "xbox_series_x"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(xboxseries)},
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -210,7 +218,13 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) 
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val play5  = Producto(
+                                        id = 6,
+                                        nombre = "PlayStation 5",
+                                        precio = 499990,
+                                        urlImagen = "ps5"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(play5) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -263,7 +277,13 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) 
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val steamdeck  = Producto(
+                                        id = 7,
+                                        nombre = "Steam Deck",
+                                        precio = 399900,
+                                        urlImagen = "steam_deck"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(steamdeck) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -316,7 +336,13 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) 
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val ninswitch  = Producto(
+                                        id = 8,
+                                        nombre = "Nintendo Switch",
+                                        precio = 399900,
+                                        urlImagen = "nintendo_switch"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(ninswitch) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -331,12 +357,5 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier) 
             }
 
         }
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun ConsolasScreenPreview() {
-    LevelUpTheme {
-        ConsolasScreen(navController = rememberNavController())
     }
 }

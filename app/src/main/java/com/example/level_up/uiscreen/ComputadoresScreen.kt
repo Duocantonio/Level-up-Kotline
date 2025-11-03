@@ -53,11 +53,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.R
 import com.example.level_up.ui.theme.LevelUpTheme
+import com.example.level_up.viewmodels.CarritoViewModel
+import com.example.level_up.viewmodels.Producto
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifier, carritoViewModel: CarritoViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -179,7 +181,13 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val torre1  = Producto(
+                                        id = 1,
+                                        nombre = "Pc gamer 1",
+                                        precio = 599900,
+                                        urlImagen = "pc_gamer_1"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(torre1) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -232,7 +240,13 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val torre2  = Producto(
+                                        id = 2,
+                                        nombre = "Pc gamer 2",
+                                        precio = 1299900,
+                                        urlImagen = "pc_gamer_2"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(torre2) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -285,7 +299,13 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val laptop  = Producto(
+                                        id = 3,
+                                        nombre = "laptop",
+                                        precio = 999900,
+                                        urlImagen = "laptop_gamer"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(laptop) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -338,7 +358,13 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Button(
-                                    onClick = { /* TODO: Lógica para añadir al carrito */ },
+                                    onClick = { val torre3  = Producto(
+                                        id = 4,
+                                        nombre = "Pc gamer 2",
+                                        precio = 1499900,
+                                        urlImagen = "pc_streaming"
+                                    )
+                                        carritoViewModel.agregarAlCarrito(torre3) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp)
@@ -351,13 +377,5 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ComputadoresScreenPreview() {
-    LevelUpTheme {
-        ComputadoresScreen(navController = rememberNavController())
     }
 }

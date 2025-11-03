@@ -20,11 +20,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -37,73 +39,66 @@ import com.example.level_up.uiscreen.*
 import com.example.level_up.viewmodels.MainViewModel
 import com.example.level_up.viewmodels.UserViewModel
 import com.example.level_up.viewmodels.UserViewModelFactory
+import com.example.level_up.viewmodels.CarritoViewModel
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
-
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel: MainViewModel = viewModel()
+            val mainViewModel: MainViewModel = viewModel()
+            val carritoViewModel: CarritoViewModel = viewModel()
             val navController = rememberNavController()
 
+            // Configuración del repositorio y usuario
             val context = LocalContext.current
             val userDao = AppDatabase.getDatabase(context).userDao()
             val repository = UserRepository(userDao)
             val factory = UserViewModelFactory(repository)
             val usuarioViewModel: UserViewModel = viewModel(factory = factory)
+
             LevelUpTheme {
-                LaunchedEffect(key1 = Unit) {
-                    viewModel.navigationEvent.collectLatest { event ->
+                // 🔹 Manejo de eventos de navegación
+                LaunchedEffect(Unit) {
+                    mainViewModel.navigationEvent.collectLatest { event ->
                         when (event) {
                             is NavigationEvent.NavigateTo -> {
                                 navController.navigate(event.route.route) {
-                                    event.popUpToRoute?.let { popUpToRoute ->
-                                        popUpTo(popUpToRoute.route) {
-                                            inclusive = event.inclusive
-                                        }
-                                    }
+                                    event.popUpToRoute?.let { popUpTo(it.route) { inclusive = event.inclusive } }
                                     launchSingleTop = event.singleTop
                                 }
                             }
-
-                            is NavigationEvent.PopBackStack -> {
-                                navController.popBackStack()
-                            }
-
-                            is NavigationEvent.NavigateUp -> {
-                                navController.navigateUp()
-                            }
+                            is NavigationEvent.PopBackStack -> navController.popBackStack()
+                            is NavigationEvent.NavigateUp -> navController.navigateUp()
                         }
                     }
                 }
 
-                // NavHost es el contenedor que dibuja la pantalla actual
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Home.route // Define la pantalla inicial
+                    startDestination = Screen.Home.route
                 ) {
                     composable(route = Screen.Home.route) {
-                        HomeScreen(navController = navController, viewModel = viewModel)
+                        HomeScreen(
+                            navController = navController,
+                            viewModel = mainViewModel
+                        )
                     }
+
                     composable(route = Screen.Profile.route) {
                         ProfileScreen(
                             navController = navController,
-                            mainViewModel = viewModel,         // para navegación
-                            usuarioViewModel = usuarioViewModel // para datos del usuario
+                            mainViewModel = mainViewModel,
+                            usuarioViewModel = usuarioViewModel
                         )
                     }
+
                     composable(route = Screen.Setitings.route) {
-                        SettingsScreen(navController = navController, viewModel = viewModel)
+                        SettingsScreen(navController = navController, viewModel = mainViewModel)
                     }
-                    composable(route = Screen.Register.route){
+
+                    composable(route = Screen.Register.route) {
                         RegistroScreen(navController, usuarioViewModel = usuarioViewModel)
                     }
 
@@ -111,20 +106,43 @@ class MainActivity : ComponentActivity() {
                         ProductosScreen()
                     }
 
-                    composable(route = Screen.JuegosDeMesa.route) { 
-                        JuegosDeMesaScreen(navController = navController) }
-                    composable(route = Screen.Perifericos.route) { PerifericosScreen(navController = navController) }
-                    composable(route = Screen.Computadores.route) { ComputadoresScreen(navController = navController) }
-                    composable(route = Screen.Consolas.route) { ConsolasScreen(navController = navController) }
+                    composable(route = Screen.JuegosDeMesa.route) {
+                        JuegosDeMesaScreen(navController= navController,
+                            carritoViewModel = carritoViewModel)
+                    }
 
-                    composable(Screen.Camera.route) { WithPermission( modifier = Modifier.fillMaxSize(), permission = Manifest.permission.CAMERA ) { CameraAppScreen() } }
+                    composable(route = Screen.Perifericos.route) {
+                        PerifericosScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
+                    }
 
+                    composable(route = Screen.Computadores.route) {
+                        ComputadoresScreen(navController = navController,carritoViewModel = carritoViewModel)
+                    }
+
+                    composable(route = Screen.Consolas.route) {
+                        ConsolasScreen(navController = navController,carritoViewModel = carritoViewModel)
+                    }
+
+                    composable(Screen.Camera.route) {
+                        WithPermission(
+                            modifier = Modifier.fillMaxSize(),
+                            permission = Manifest.permission.CAMERA
+                        ) {
+                            CameraAppScreen()
+                        }
+                    }
+
+                    composable(route = Screen.Cart.route) {
+                        CarritoScreen(viewModel = carritoViewModel)
+                    }
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun CameraAppScreen() {
@@ -141,33 +159,31 @@ fun CameraAppScreen() {
         )
 
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Row {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { lensFacing = CameraSelector.LENS_FACING_FRONT }) {
-                    Text("Cámara frontal")
+                    Text("Frontal")
                 }
                 Button(onClick = { lensFacing = CameraSelector.LENS_FACING_BACK }) {
-                    Text("Cámara trasera")
+                    Text("Trasera")
                 }
             }
 
-            Row {
-                Button(onClick = { zoomLevel = 0.0f }) { Text("Zoom 0.0") }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { zoomLevel = 0.0f }) { Text("Zoom 0") }
                 Button(onClick = { zoomLevel = 0.5f }) { Text("Zoom 0.5") }
                 Button(onClick = { zoomLevel = 1.0f }) { Text("Zoom 1.0") }
             }
 
             Button(onClick = {
-                val outputFileOptions =
-                    ImageCapture.OutputFileOptions.Builder(File(localContext.externalCacheDir, "image.jpg"))
-                        .build()
+                val outputFileOptions = ImageCapture.OutputFileOptions.Builder(
+                    File(localContext.externalCacheDir, "image.jpg")
+                ).build()
                 val callback = object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                         outputFileResults.savedUri?.shareAsImage(localContext)
                     }
-
                     override fun onError(exception: ImageCaptureException) {}
                 }
-
                 imageCaptureUseCase.takePicture(
                     outputFileOptions,
                     ContextCompat.getMainExecutor(localContext),
@@ -197,7 +213,12 @@ fun CameraPreview(
         cameraProvider?.let { provider ->
             val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
             provider.unbindAll()
-            val camera = provider.bindToLifecycle(lifecycleOwner, selector, previewUseCase, imageCaptureUseCase)
+            val camera = provider.bindToLifecycle(
+                lifecycleOwner,
+                selector,
+                previewUseCase,
+                imageCaptureUseCase
+            )
             cameraControl = camera.cameraControl
         }
     }
