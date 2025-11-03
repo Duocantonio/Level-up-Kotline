@@ -13,6 +13,10 @@ interface UserDao {
     @Query("UPDATE users SET loggedIn = :estado WHERE correo = :correo")
     suspend fun actualizarEstadoSesion(correo: String, estado: Boolean)
 
+    @Query("SELECT * FROM users WHERE correo = :correo AND clave = :clave LIMIT 1")
+    suspend fun verificarCredenciales(correo: String, clave: String): User?
+
+
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

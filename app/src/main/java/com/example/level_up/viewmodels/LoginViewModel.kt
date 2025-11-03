@@ -2,33 +2,43 @@ package com.example.level_up.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.level_up.navigation.LoginUiState
+import com.example.level_up.data.repository.UserRepository
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+data class LoginUiState(
+    val correo: String = "",
+    val clave: String = "",
+    val error: String? = null
+)
+
+class LoginViewModel(private val repository: UserRepository) : ViewModel() {
+
     private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
-    fun onCorreoChange(correo: String) {
-        _uiState.update { it.copy(correo = correo) }
+    fun onCorreoChange(nuevoCorreo: String) {
+        _uiState.update { it.copy(correo = nuevoCorreo) }
     }
 
-    fun onClaveChange(clave: String) {
-        _uiState.update { it.copy(clave = clave) }
+    fun onClaveChange(nuevaClave: String) {
+        _uiState.update { it.copy(clave = nuevaClave) }
     }
 
     fun login(onLoginSuccess: () -> Unit) {
         viewModelScope.launch {
-            if (uiState.value.correo == "admin" && uiState.value.clave == "admin") {
+            val correo = uiState.value.correo
+            val clave = uiState.value.clave
+
+            val usuario = repository.verificarCredenciales(correo, clave)
+
+            if (usuario != null) {
+                repository.actualizarEstadoSesion(correo, true)
                 onLoginSuccess()
             } else {
-                _uiState.update {
-                    it.copy(error = "Credenciales incorrectas")
-                }
+                _uiState.update { it.copy(error = "Correo o contraseña incorrectos") }
             }
         }
     }

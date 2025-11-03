@@ -21,12 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.level_up.viewmodels.UserViewModel // <-- Correcto
-
+import com.example.level_up.viewmodels.UserViewModel
 @Composable
 fun RegistroScreen(
     navController: NavController,
-    usuarioViewModel: UserViewModel // <-- Correcto
+    usuarioViewModel: UserViewModel
 ){
     val estado by usuarioViewModel.estado.collectAsState()
 
@@ -98,14 +97,11 @@ fun RegistroScreen(
             Text("Acepto los términos y condiciones")
         }
 
-        // --- BOTÓN CORREGIDO ---
         Button(
             onClick = {
                 if (usuarioViewModel.validarFormulario()) {
-                    // ¡Paso 1: Guardar el usuario en la base de datos!
                     usuarioViewModel.registrarUsuario()
 
-                    // Paso 2: Navegar a la pantalla de inicio
                     navController.navigate("home_page")
                 }
             },

@@ -11,6 +11,7 @@ import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.camera.view.PreviewView
@@ -38,8 +39,10 @@ import com.example.level_up.ui.theme.LevelUpTheme
 import com.example.level_up.uiscreen.*
 import com.example.level_up.viewmodels.MainViewModel
 import com.example.level_up.viewmodels.UserViewModel
-import com.example.level_up.viewmodels.UserViewModelFactory
 import com.example.level_up.viewmodels.CarritoViewModel
+import com.example.level_up.viewmodels.LoginViewModel
+import com.example.level_up.viewmodels.LoginViewModelFactory
+import com.example.level_up.viewmodels.UserViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 
@@ -51,24 +54,32 @@ class MainActivity : ComponentActivity() {
             val carritoViewModel: CarritoViewModel = viewModel()
             val navController = rememberNavController()
 
-            // Configuración del repositorio y usuario
+
             val context = LocalContext.current
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val repository = UserRepository(userDao)
-            val factory = UserViewModelFactory(repository)
-            val usuarioViewModel: UserViewModel = viewModel(factory = factory)
+            val userRepository = UserRepository(userDao)
+
+            val loginFactory = LoginViewModelFactory(userRepository)
+            val loginViewModel: LoginViewModel = viewModel(factory = loginFactory)
+
+            val userFactory = UserViewModelFactory(userRepository)
+            val userViewModel: UserViewModel = viewModel(factory = userFactory)
 
             LevelUpTheme {
-                // 🔹 Manejo de eventos de navegación
                 LaunchedEffect(Unit) {
                     mainViewModel.navigationEvent.collectLatest { event ->
                         when (event) {
                             is NavigationEvent.NavigateTo -> {
                                 navController.navigate(event.route.route) {
-                                    event.popUpToRoute?.let { popUpTo(it.route) { inclusive = event.inclusive } }
+                                    event.popUpToRoute?.let {
+                                        popUpTo(it.route) {
+                                            inclusive = event.inclusive
+                                        }
+                                    }
                                     launchSingleTop = event.singleTop
                                 }
                             }
+
                             is NavigationEvent.PopBackStack -> navController.popBackStack()
                             is NavigationEvent.NavigateUp -> navController.navigateUp()
                         }
@@ -77,7 +88,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Home.route
+                    startDestination = Screen.Login.route
                 ) {
                     composable(route = Screen.Home.route) {
                         HomeScreen(
@@ -86,11 +97,27 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    composable(route = Screen.Login.route) {
+                        LoginScreen(
+                            loginViewModel = loginViewModel,
+                            onLoginSuccess = {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
+                                }
+                            },
+                            onRegisterClick = {
+                                navController.navigate(Screen.Register.route)
+                            }
+                        )
+                    }
+
+
+
                     composable(route = Screen.Profile.route) {
                         ProfileScreen(
                             navController = navController,
                             mainViewModel = mainViewModel,
-                            usuarioViewModel = usuarioViewModel
+                            usuarioViewModel = userViewModel
                         )
                     }
 
@@ -99,7 +126,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.Register.route) {
-                        RegistroScreen(navController, usuarioViewModel = usuarioViewModel)
+                        RegistroScreen(
+                            navController = navController,
+                            usuarioViewModel = userViewModel
+                        )
                     }
 
                     composable(route = Screen.Product.route) {
@@ -107,8 +137,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.JuegosDeMesa.route) {
-                        JuegosDeMesaScreen(navController= navController,
-                            carritoViewModel = carritoViewModel)
+                        JuegosDeMesaScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
 
                     composable(route = Screen.Perifericos.route) {
@@ -119,11 +151,17 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = Screen.Computadores.route) {
-                        ComputadoresScreen(navController = navController,carritoViewModel = carritoViewModel)
+                        ComputadoresScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
 
                     composable(route = Screen.Consolas.route) {
-                        ConsolasScreen(navController = navController,carritoViewModel = carritoViewModel)
+                        ConsolasScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
 
                     composable(Screen.Camera.route) {
@@ -142,114 +180,116 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun CameraAppScreen() {
-    var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_FRONT) }
-    var zoomLevel by remember { mutableFloatStateOf(0.0f) }
-    val imageCaptureUseCase = remember { ImageCapture.Builder().build() }
-    val localContext = LocalContext.current
 
-    Box {
-        CameraPreview(
-            lensFacing = lensFacing,
-            zoomLevel = zoomLevel,
-            imageCaptureUseCase = imageCaptureUseCase
-        )
+    @Composable
+    fun CameraAppScreen() {
+        var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_FRONT) }
+        var zoomLevel by remember { mutableFloatStateOf(0.0f) }
+        val imageCaptureUseCase = remember { ImageCapture.Builder().build() }
+        val localContext = LocalContext.current
 
-        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { lensFacing = CameraSelector.LENS_FACING_FRONT }) {
-                    Text("Frontal")
-                }
-                Button(onClick = { lensFacing = CameraSelector.LENS_FACING_BACK }) {
-                    Text("Trasera")
-                }
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { zoomLevel = 0.0f }) { Text("Zoom 0") }
-                Button(onClick = { zoomLevel = 0.5f }) { Text("Zoom 0.5") }
-                Button(onClick = { zoomLevel = 1.0f }) { Text("Zoom 1.0") }
-            }
-
-            Button(onClick = {
-                val outputFileOptions = ImageCapture.OutputFileOptions.Builder(
-                    File(localContext.externalCacheDir, "image.jpg")
-                ).build()
-                val callback = object : ImageCapture.OnImageSavedCallback {
-                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        outputFileResults.savedUri?.shareAsImage(localContext)
-                    }
-                    override fun onError(exception: ImageCaptureException) {}
-                }
-                imageCaptureUseCase.takePicture(
-                    outputFileOptions,
-                    ContextCompat.getMainExecutor(localContext),
-                    callback
-                )
-            }) {
-                Text("Capturar")
-            }
-        }
-    }
-}
-
-@Composable
-fun CameraPreview(
-    modifier: Modifier = Modifier,
-    lensFacing: Int,
-    zoomLevel: Float,
-    imageCaptureUseCase: ImageCapture
-) {
-    val previewUseCase = remember { androidx.camera.core.Preview.Builder().build() }
-    var cameraProvider: ProcessCameraProvider? by remember { mutableStateOf(null) }
-    var cameraControl: CameraControl? by remember { mutableStateOf(null) }
-    val localContext = LocalContext.current
-    val lifecycleOwner = localContext as LifecycleOwner
-
-    fun rebindCameraProvider() {
-        cameraProvider?.let { provider ->
-            val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
-            provider.unbindAll()
-            val camera = provider.bindToLifecycle(
-                lifecycleOwner,
-                selector,
-                previewUseCase,
-                imageCaptureUseCase
+        Box {
+            CameraPreview(
+                lensFacing = lensFacing,
+                zoomLevel = zoomLevel,
+                imageCaptureUseCase = imageCaptureUseCase
             )
-            cameraControl = camera.cameraControl
-        }
-    }
 
-    LaunchedEffect(Unit) {
-        cameraProvider = ProcessCameraProvider.awaitInstance(localContext)
-        rebindCameraProvider()
-    }
-    LaunchedEffect(lensFacing) { rebindCameraProvider() }
-    LaunchedEffect(zoomLevel) { cameraControl?.setLinearZoom(zoomLevel) }
+            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { lensFacing = CameraSelector.LENS_FACING_FRONT }) {
+                        Text("Frontal")
+                    }
+                    Button(onClick = { lensFacing = CameraSelector.LENS_FACING_BACK }) {
+                        Text("Trasera")
+                    }
+                }
 
-    AndroidView(
-        modifier = modifier.fillMaxSize(),
-        factory = { context ->
-            PreviewView(context).also {
-                previewUseCase.surfaceProvider = it.surfaceProvider
-                rebindCameraProvider()
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { zoomLevel = 0.0f }) { Text("Zoom 0") }
+                    Button(onClick = { zoomLevel = 0.5f }) { Text("Zoom 0.5") }
+                    Button(onClick = { zoomLevel = 1.0f }) { Text("Zoom 1.0") }
+                }
+
+                Button(onClick = {
+                    val outputFileOptions = ImageCapture.OutputFileOptions.Builder(
+                        File(localContext.externalCacheDir, "image.jpg")
+                    ).build()
+                    val callback = object : ImageCapture.OnImageSavedCallback {
+                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                            outputFileResults.savedUri?.shareAsImage(localContext)
+                        }
+
+                        override fun onError(exception: ImageCaptureException) {}
+                    }
+                    imageCaptureUseCase.takePicture(
+                        outputFileOptions,
+                        ContextCompat.getMainExecutor(localContext),
+                        callback
+                    )
+                }) {
+                    Text("Capturar")
+                }
             }
         }
-    )
-}
-
-fun Uri.shareAsImage(context: Context) {
-    val contentUri = FileProvider.getUriForFile(
-        context,
-        "com.example.level_up.fileprovider",
-        toFile()
-    )
-    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-        putExtra(Intent.EXTRA_STREAM, contentUri)
-        type = "image/jpeg"
     }
-    context.startActivity(Intent.createChooser(shareIntent, null))
+
+    @Composable
+    fun CameraPreview(
+        modifier: Modifier = Modifier,
+        lensFacing: Int,
+        zoomLevel: Float,
+        imageCaptureUseCase: ImageCapture
+    ) {
+        val previewUseCase = remember { Preview.Builder().build() }
+        var cameraProvider: ProcessCameraProvider? by remember { mutableStateOf(null) }
+        var cameraControl: CameraControl? by remember { mutableStateOf(null) }
+        val localContext = LocalContext.current
+        val lifecycleOwner = localContext as LifecycleOwner
+
+        fun rebindCameraProvider() {
+            cameraProvider?.let { provider ->
+                val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+                provider.unbindAll()
+                val camera = provider.bindToLifecycle(
+                    lifecycleOwner,
+                    selector,
+                    previewUseCase,
+                    imageCaptureUseCase
+                )
+                cameraControl = camera.cameraControl
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            cameraProvider = ProcessCameraProvider.awaitInstance(localContext)
+            rebindCameraProvider()
+        }
+        LaunchedEffect(lensFacing) { rebindCameraProvider() }
+        LaunchedEffect(zoomLevel) { cameraControl?.setLinearZoom(zoomLevel) }
+
+        AndroidView(
+            modifier = modifier.fillMaxSize(),
+            factory = { context ->
+                PreviewView(context).also {
+                    previewUseCase.surfaceProvider = it.surfaceProvider
+                    rebindCameraProvider()
+                }
+            }
+        )
+    }
+
+    fun Uri.shareAsImage(context: Context) {
+        val contentUri = FileProvider.getUriForFile(
+            context,
+            "com.example.level_up.fileprovider",
+            toFile()
+        )
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_STREAM, contentUri)
+            type = "image/jpeg"
+        }
+        context.startActivity(Intent.createChooser(shareIntent, null))
+    }
 }

@@ -18,4 +18,8 @@ class UserRepository(private val dao: UserDao) {
 
     suspend fun actualizarEstadoSesion(correo: String, estado: Boolean) =
         dao.actualizarEstadoSesion(correo, estado)
+
+    suspend fun verificarCredenciales(correo: String, clave: String): User? {
+        return dao.verificarCredenciales(correo, clave)
+    }
 }

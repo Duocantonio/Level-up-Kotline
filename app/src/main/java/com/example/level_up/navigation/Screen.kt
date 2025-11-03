@@ -5,10 +5,11 @@ sealed class Screen(val route: String) {
     data object Profile : Screen("profile_page")
     data object Camera : Screen("camera_page")
     data object Setitings : Screen("settings_page")
-    data object Register : Screen("registrar")
+    data object Register : Screen("registro")
     data object Resume : Screen("resumen")
     data object Product : Screen("productos")
     data object Cart : Screen("carrito")
+    data object Login : Screen("login")
 
 
     // Rutas de Categorías
@@ -16,8 +17,4 @@ sealed class Screen(val route: String) {
     data object Perifericos : Screen("perifericos")
     data object Computadores : Screen("computadores")
     data object Consolas : Screen("consolas")
-
-    data class Detail(val itemId: String) : Screen("detail_page/{itemId}") {
-        fun buildRoute(): String = route.replace("{itemId}", itemId)
-    }
 }

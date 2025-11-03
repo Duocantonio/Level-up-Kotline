@@ -13,17 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.level_up.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = viewModel(),
+    loginViewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
     onRegisterClick: () -> Unit
 ) {
-    val viewModel: LoginViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by loginViewModel.uiState.collectAsState()
 
 
     Column(
