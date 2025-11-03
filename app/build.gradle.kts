@@ -42,16 +42,16 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material-icons-core:1.7.8")
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 
 
 
-    implementation("androidx.room:room-runtime:2.8.2")
-    implementation("androidx.room:room-ktx:2.8.3")
-    ksp("androidx.room:room-compiler:2.8.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
-     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+     implementation(libs.androidx.lifecycle.runtime.compose)
 
 
 
@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.androidx.camera.video)
     implementation(libs.androidx.camera.extensions)
 
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.datastore.preferences)
 
 
     implementation(libs.androidx.navigation.compose)

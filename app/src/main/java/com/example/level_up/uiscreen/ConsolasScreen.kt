@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.R
-import com.example.level_up.ui.theme.LevelUpTheme
 import com.example.level_up.viewmodels.CarritoViewModel
+
 import com.example.level_up.viewmodels.Producto
 import kotlinx.coroutines.launch
 
