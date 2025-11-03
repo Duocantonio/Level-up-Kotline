@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.level_up.api.viewModel.PostViewModel
 import com.example.level_up.data.local.AppDatabase
 import com.example.level_up.data.repository.UserRepository
 import com.example.level_up.navigation.NavigationEvent
@@ -53,6 +54,7 @@ class MainActivity : ComponentActivity() {
             val mainViewModel: MainViewModel = viewModel()
             val carritoViewModel: CarritoViewModel = viewModel()
             val navController = rememberNavController()
+            val postViewModel: PostViewModel= viewModel()
 
 
             val context = LocalContext.current
@@ -175,6 +177,10 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = Screen.Cart.route) {
                         CarritoScreen(viewModel = carritoViewModel)
+                    }
+
+                    composable(route = Screen.Post.route){
+                        PostScreen(viewModel = postViewModel)
                     }
                 }
             }

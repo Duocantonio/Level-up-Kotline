@@ -11,8 +11,10 @@ sealed class Screen(val route: String) {
     data object Cart : Screen("carrito")
     data object Login : Screen("login")
 
+    data object Post: Screen("postscreen")
 
-    // Rutas de Categorías
+
+
     data object JuegosDeMesa : Screen("juegos_de_mesa")
     data object Perifericos : Screen("perifericos")
     data object Computadores : Screen("computadores")

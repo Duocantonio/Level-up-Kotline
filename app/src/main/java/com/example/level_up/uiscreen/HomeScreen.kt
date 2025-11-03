@@ -143,6 +143,10 @@ fun HomeScreen(
                 Button(onClick = { navController.navigate(Screen.Camera.route) }, modifier = buttonModifier) {
                     Text("Ir a Cámara")
                 }
+
+                Button(onClick = {navController.navigate(Screen.Post.route)}, modifier = buttonModifier){
+                    Text("ir a post")
+                }
             }
         }
     }
