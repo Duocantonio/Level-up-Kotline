@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +35,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.level_up.R
 import com.example.level_up.ui.theme.LevelUpTheme
+import androidx.compose.ui.draw.paint // Importación necesaria
+import androidx.compose.ui.graphics.painter.Painter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComputadoresScreen(modifier: Modifier = Modifier) {
+
+    // 1. Define el Painter para la imagen de fondo
+    // ¡Asegúrate de cambiar 'fondo_tecnologico' por el nombre de tu recurso de imagen!
+    val backgroundPainter: Painter = painterResource(id = R.drawable.fondo_pagina)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,11 +60,20 @@ fun ComputadoresScreen(modifier: Modifier = Modifier) {
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFFE0F7FA))
+                // 2. Aplicamos el color de fondo del tema (DarkPurpleBackground)
+                .background(MaterialTheme.colorScheme.background)
+                // 3. Aplicamos la imagen de fondo con .paint()
+                .paint(
+                    painter = backgroundPainter,
+                    contentScale = ContentScale.Crop, // Escala para cubrir todo el LazyColumn
+                    alignment = Alignment.Center,
+                    alpha = 0.4f // Reducir la opacidad a 0.4 para asegurar que los textos neón se vean bien
+                )
                 .padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // El resto de la estructura de items se mantiene igual
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -269,13 +286,12 @@ fun ComputadoresScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun ComputadesScreenPreview() {
     LevelUpTheme {
-        JuegosDeMesaScreen()
+        ComputadoresScreen()
     }
 }
