@@ -26,7 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +40,9 @@ import com.example.level_up.ui.theme.LevelUpTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JuegosDeMesaScreen(modifier: Modifier = Modifier) {
+
+    val backgroundPainter: Painter = painterResource(id= R.drawable.fondo_pagina)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,6 +58,11 @@ fun JuegosDeMesaScreen(modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .paint(
+                    painter = backgroundPainter,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
                 .padding(innerPadding), // Aplica el padding de la barra superior
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
