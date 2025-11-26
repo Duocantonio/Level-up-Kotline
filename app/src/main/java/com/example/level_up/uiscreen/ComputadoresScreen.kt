@@ -5,7 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,16 +34,18 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment // Importación necesaria para Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+// Importación necesaria para Modifier.paint
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,11 +59,17 @@ import com.example.level_up.viewmodels.CarritoViewModel
 import com.example.level_up.viewmodels.Producto
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifier, carritoViewModel: CarritoViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // **NOTA IMPORTANTE:**
+    // Asegúrate de que tienes un recurso de imagen llamado 'bg_texture' en tu carpeta res/drawable.
+    // Si la imagen se llama diferente, ajusta el ID aquí.
+    val backgroundPainter = painterResource(id = R.drawable.fondo_pagina)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -132,14 +140,25 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                 )
             }
         ) { innerPadding ->
+            // --- INICIO DE CAMBIOS VISUALES ---
             LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
-                    .background(Color(0xFFE0F7FA))
+                    // 1. Aplicamos el color de fondo del tema
+                    .background(MaterialTheme.colorScheme.background)
+                    // 2. Aplicamos la imagen de fondo con .paint()
+                    .paint(
+                        painter = backgroundPainter,
+                        contentScale = ContentScale.Crop, // Escala para cubrir todo el LazyColumn
+                        alignment = Alignment.Center,
+                        alpha = 0.4f // Reducir la opacidad
+                    )
                     .padding(innerPadding),
+                // --- FIN DE CAMBIOS VISUALES ---
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // ... (El resto de tus items de Card permanecen sin cambios)
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),

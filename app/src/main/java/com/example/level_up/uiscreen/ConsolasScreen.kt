@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,6 +41,8 @@ import kotlinx.coroutines.launch
 fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier, carritoViewModel: CarritoViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    val backgroundPainter = painterResource(id = R.drawable.fondo_pagina)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -113,7 +116,13 @@ fun ConsolasScreen(navController: NavController, modifier: Modifier = Modifier, 
             LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
-                    .background(Color(0xFFE0F7FA))
+                    .background(MaterialTheme.colorScheme.background)
+                    .paint(
+                        painter = backgroundPainter,
+                        contentScale = ContentScale.Crop, // Escala para cubrir todo el LazyColumn
+                        alignment = Alignment.Center,
+                        alpha = 0.4f // Reducir la opacidad
+                    )
                     .padding(innerPadding),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
