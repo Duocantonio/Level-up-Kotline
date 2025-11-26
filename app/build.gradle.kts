@@ -54,7 +54,7 @@ dependencies {
 
 
     implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
