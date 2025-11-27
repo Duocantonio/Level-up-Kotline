@@ -16,4 +16,8 @@ open class PostRepository {
     open suspend fun updateUsuario(id: Int, usuario: Usuario): Usuario {
         return RetrofitInstance.api.updateUsuario(id, usuario)
     }
+
+
+
+
 }

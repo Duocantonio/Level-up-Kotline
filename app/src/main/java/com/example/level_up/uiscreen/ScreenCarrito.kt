@@ -93,7 +93,7 @@ fun CarritoScreen(viewModel: CarritoViewModel = viewModel()) {
             )
 
             Button(
-                onClick = { /* Lógica para finalizar la compra */ },
+                onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp)

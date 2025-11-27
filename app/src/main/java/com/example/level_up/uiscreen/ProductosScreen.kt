@@ -89,11 +89,3 @@ fun ProductosScreen(modifier: Modifier = Modifier) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun ProductosScreenPreview() {
-    LevelUpTheme {
-        ProductosScreen()
-    }
-}

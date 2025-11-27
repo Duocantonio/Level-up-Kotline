@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.level_up.api.repository.PostRepository
 import com.example.level_up.api.viewModel.PostViewModel
 import com.example.level_up.data.local.AppDatabase
 import com.example.level_up.data.repository.UserRepository
@@ -39,11 +40,9 @@ import com.example.level_up.ui.permission.WithPermission
 import com.example.level_up.ui.theme.LevelUpTheme
 import com.example.level_up.uiscreen.*
 import com.example.level_up.viewmodels.MainViewModel
-import com.example.level_up.viewmodels.UserViewModel
 import com.example.level_up.viewmodels.CarritoViewModel
 import com.example.level_up.viewmodels.LoginViewModel
 import com.example.level_up.viewmodels.LoginViewModelFactory
-import com.example.level_up.viewmodels.UserViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 
@@ -61,11 +60,11 @@ class MainActivity : ComponentActivity() {
             val userDao = AppDatabase.getDatabase(context).userDao()
             val userRepository = UserRepository(userDao)
 
-            val loginFactory = LoginViewModelFactory(userRepository)
-            val loginViewModel: LoginViewModel = viewModel(factory = loginFactory)
 
-            val userFactory = UserViewModelFactory(userRepository)
-            val userViewModel: UserViewModel = viewModel(factory = userFactory)
+            val loginViewModel: LoginViewModel = viewModel(
+                factory = LoginViewModelFactory(PostRepository())
+            )
+
 
             LevelUpTheme {
                 LaunchedEffect(Unit) {
@@ -119,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         ProfileScreen(
                             navController = navController,
                             mainViewModel = mainViewModel,
-                            usuarioViewModel = userViewModel
+                            postViewModel = postViewModel
                         )
                     }
 
@@ -130,7 +129,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = Screen.Register.route) {
                         RegistroScreen(
                             navController = navController,
-                            usuarioViewModel = userViewModel
+                            viewModel = postViewModel
                         )
                     }
 
@@ -177,10 +176,6 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = Screen.Cart.route) {
                         CarritoScreen(viewModel = carritoViewModel)
-                    }
-
-                    composable(route = Screen.Post.route){
-                        PostScreen(viewModel = postViewModel)
                     }
                 }
             }
