@@ -31,10 +31,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.level_up.api.repository.PostRepository
+import com.example.level_up.api.repository.UsuarioRepository
 import com.example.level_up.api.viewModel.PostViewModel
-import com.example.level_up.data.local.AppDatabase
-import com.example.level_up.data.repository.UserRepository
 import com.example.level_up.navigation.NavigationEvent
 import com.example.level_up.ui.permission.WithPermission
 import com.example.level_up.ui.theme.LevelUpTheme
@@ -56,13 +54,8 @@ class MainActivity : ComponentActivity() {
             val postViewModel: PostViewModel= viewModel()
 
 
-            val context = LocalContext.current
-            val userDao = AppDatabase.getDatabase(context).userDao()
-            val userRepository = UserRepository(userDao)
-
-
             val loginViewModel: LoginViewModel = viewModel(
-                factory = LoginViewModelFactory(PostRepository())
+                factory = LoginViewModelFactory(UsuarioRepository())
             )
 
 

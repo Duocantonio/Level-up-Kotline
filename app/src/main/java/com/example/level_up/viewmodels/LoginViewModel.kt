@@ -2,9 +2,7 @@ package com.example.level_up.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.level_up.api.model.Usuario
-import com.example.level_up.api.repository.PostRepository
-import com.example.level_up.data.repository.UserRepository
+import com.example.level_up.api.repository.UsuarioRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +16,7 @@ data class LoginUiState(
     val loading: Boolean = false
 )
 
-class LoginViewModel(private val repository: PostRepository) : ViewModel() {
+class LoginViewModel(private val repository: UsuarioRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()

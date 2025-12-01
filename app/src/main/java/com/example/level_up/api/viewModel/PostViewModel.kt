@@ -3,7 +3,7 @@ package com.example.level_up.api.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.level_up.api.model.Usuario
-import com.example.level_up.api.repository.PostRepository
+import com.example.level_up.api.repository.UsuarioRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PostViewModel(
-    private val repository: PostRepository = PostRepository(),
+    private val repository: UsuarioRepository = UsuarioRepository(),
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 

@@ -2,10 +2,10 @@ package com.example.level_up.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.level_up.api.repository.PostRepository
+import com.example.level_up.api.repository.UsuarioRepository
 
 class LoginViewModelFactory(
-    private val repository: PostRepository
+    private val repository: UsuarioRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

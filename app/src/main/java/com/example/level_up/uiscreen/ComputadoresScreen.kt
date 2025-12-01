@@ -71,7 +71,6 @@ fun ComputadoresScreen(navController: NavController, modifier: Modifier = Modifi
                 Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                // Enlaces principales
                 NavigationDrawerItem(
                     label = { Text("Perfil") },
                     selected = false,

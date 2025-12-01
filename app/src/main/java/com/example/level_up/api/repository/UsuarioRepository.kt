@@ -1,9 +1,10 @@
 package com.example.level_up.api.repository
 
 import com.example.level_up.api.model.Usuario
+import com.example.level_up.api.remote.ApiService
 import com.example.level_up.api.remote.RetrofitInstance
 
-open class PostRepository {
+open class UsuarioRepository{
 
     open suspend fun getUsuario(): List<Usuario> {
         return RetrofitInstance.api.getUsuario()
