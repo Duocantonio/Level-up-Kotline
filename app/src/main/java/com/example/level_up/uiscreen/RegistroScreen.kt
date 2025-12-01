@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -127,7 +126,6 @@ fun RegistroScreen(
         Button(
             onClick = {
 
-                // Validaciones rápidas
                 if (nombre.isEmpty() || email.isEmpty() || edad.isEmpty() ||
                     direccion.isEmpty() || clave1.isEmpty() || clave2.isEmpty()
                 ) {
@@ -145,7 +143,6 @@ fun RegistroScreen(
                     return@Button
                 }
 
-                // Si pasa todas las validaciones
                 mensajeError = ""
 
                 viewModel.createUsuario(
@@ -159,7 +156,6 @@ fun RegistroScreen(
                     )
                 )
 
-                // Limpiar
                 nombre = ""
                 email = ""
                 edad = ""
@@ -167,7 +163,6 @@ fun RegistroScreen(
                 clave2 = ""
                 direccion = ""
 
-                // Si quieres navegar a home
                 navController.navigate("home_page")
             },
             modifier = Modifier.fillMaxWidth()
