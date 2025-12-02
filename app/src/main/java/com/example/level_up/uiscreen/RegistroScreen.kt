@@ -1,22 +1,28 @@
 package com.example.level_up.uiscreen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.level_up.R
 import com.example.level_up.api.model.Usuario
 import com.example.level_up.api.viewModel.PostViewModel
-import com.example.level_up.ui.components.NeonLogo
 
 @Composable
 fun RegistroScreen(
@@ -35,177 +41,138 @@ fun RegistroScreen(
 
     var mensajeError by remember { mutableStateOf("") }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.radialGradient(
-                    colors = listOf(Color.Black, Color.Red),
-                    radius = 10000f // Un radio grande para expandir el centro negro
-                )
-            )
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            NeonLogo()
 
+        OutlinedTextField(
+            value = nombre,
+            onValueChange = { nombre = it },
+            label = { Text("Nombre") },
+            isError = nombre.length <= 3,
+            supportingText = {
+                if (nombre.length <= 3)
+                    Text("Debe tener más de 3 caracteres", color = MaterialTheme.colorScheme.error)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            isError = !email.contains("@"),
+            supportingText = {
+                if (!email.contains("@"))
+                    Text("El email debe contener @", color = MaterialTheme.colorScheme.error)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = clave1,
+            onValueChange = { clave1 = it },
+            label = { Text("Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = clave2,
+            onValueChange = { clave2 = it },
+            label = { Text("Repetir Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            isError = clave1 != clave2,
+            supportingText = {
+                if (clave1 != clave2)
+                    Text("Las contraseñas no coinciden", color = MaterialTheme.colorScheme.error)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = edad,
+            onValueChange = { edad = it },
+            label = { Text("Edad") },
+            isError = (edad.toIntOrNull() ?: 0) < 18,
+            supportingText = {
+                if ((edad.toIntOrNull() ?: 0) < 18)
+                    Text("Debe ser mayor de edad", color = MaterialTheme.colorScheme.error)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = direccion,
+            onValueChange = { direccion = it },
+            label = { Text("Dirección") },
+            isError = direccion.length <= 3,
+            supportingText = {
+                if (direccion.length <= 3)
+                    Text("La dirección debe tener más de 3 caracteres", color = MaterialTheme.colorScheme.error)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if (mensajeError.isNotEmpty()) {
             Text(
-                text = "Registro",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.Cyan,
-                modifier = Modifier.padding(bottom = 24.dp)
+                text = mensajeError,
+                color = MaterialTheme.colorScheme.error
             )
+        }
 
-            val textFieldColors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Cyan,
-                unfocusedTextColor = Color.Green,
-                cursorColor = Color.Cyan,
-                focusedBorderColor = Color.Green,
-                unfocusedBorderColor = Color.Cyan,
-                focusedLabelColor = Color.Green,
-                unfocusedLabelColor = Color.Cyan,
-                errorBorderColor = Color.Red,
-                errorLabelColor = Color.Red,
-                errorSupportingTextColor = Color.Red
-            )
+        Button(
+            onClick = {
 
-            OutlinedTextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") },
-                isError = nombre.length <= 3 && nombre.isNotEmpty(),
-                supportingText = {
-                    if (nombre.length <= 3 && nombre.isNotEmpty())
-                        Text("Debe tener más de 3 caracteres")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                // Validaciones rápidas
+                if (nombre.isEmpty() || email.isEmpty() || edad.isEmpty() ||
+                    direccion.isEmpty() || clave1.isEmpty() || clave2.isEmpty()
+                ) {
+                    mensajeError = "Todos los campos son obligatorios"
+                    return@Button
+                }
 
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                isError = !email.contains("@") && email.isNotEmpty(),
-                supportingText = {
-                    if (!email.contains("@") && email.isNotEmpty())
-                        Text("El email debe contener @")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                if (clave1 != clave2) {
+                    mensajeError = "Las contraseñas no coinciden"
+                    return@Button
+                }
 
-            OutlinedTextField(
-                value = clave1,
-                onValueChange = { clave1 = it },
-                label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                if ((edad.toIntOrNull() ?: 0) < 18) {
+                    mensajeError = "Debes ser mayor de edad"
+                    return@Button
+                }
 
-            OutlinedTextField(
-                value = clave2,
-                onValueChange = { clave2 = it },
-                label = { Text("Repetir Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
-                isError = clave1 != clave2,
-                supportingText = {
-                    if (clave1 != clave2)
-                        Text("Las contraseñas no coinciden")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                // Si pasa todas las validaciones
+                mensajeError = ""
 
-            OutlinedTextField(
-                value = edad,
-                onValueChange = { edad = it },
-                label = { Text("Edad") },
-                isError = (edad.toIntOrNull() ?: 0) < 18 && edad.isNotEmpty(),
-                supportingText = {
-                    if ((edad.toIntOrNull() ?: 0) < 18 && edad.isNotEmpty())
-                        Text("Debe ser mayor de edad")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = direccion,
-                onValueChange = { direccion = it },
-                label = { Text("Dirección") },
-                isError = direccion.length <= 3 && direccion.isNotEmpty(),
-                supportingText = {
-                    if (direccion.length <= 3 && direccion.isNotEmpty())
-                        Text("La dirección debe tener más de 3 caracteres")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = textFieldColors,
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (mensajeError.isNotEmpty()) {
-                Text(
-                    text = mensajeError,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    if (nombre.isEmpty() || email.isEmpty() || edad.isEmpty() ||
-                        direccion.isEmpty() || clave1.isEmpty() || clave2.isEmpty()
-                    ) {
-                        mensajeError = "Todos los campos son obligatorios"
-                        return@Button
-                    }
-                    if (clave1 != clave2) {
-                        mensajeError = "Las contraseñas no coinciden"
-                        return@Button
-                    }
-                    if ((edad.toIntOrNull() ?: 0) < 18) {
-                        mensajeError = "Debes ser mayor de edad"
-                        return@Button
-                    }
-                    mensajeError = ""
-
-                    viewModel.createUsuario(
-                        Usuario(
-                            nombre = nombre,
-                            email = email,
-                            edad = edad.toIntOrNull() ?: 0,
-                            clave1 = clave1,
-                            clave2 = clave2,
-                            direccion = direccion
-                        )
+                viewModel.createUsuario(
+                    Usuario(
+                        nombre = nombre,
+                        email = email,
+                        edad = edad.toIntOrNull() ?: 0,
+                        clave1 = clave1,
+                        clave2 = clave2,
+                        direccion = direccion
                     )
-                    navController.navigate(Screen.Home.route)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Cyan)
-            ) {
-                Text("Registrar", color = Color.Black)
-            }
+                )
+
+                // Limpiar
+                nombre = ""
+                email = ""
+                edad = ""
+                clave1 = ""
+                clave2 = ""
+                direccion = ""
+
+                // Si quieres navegar a home
+                navController.navigate("home_page")
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrar")
         }
     }
 }

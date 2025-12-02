@@ -7,13 +7,27 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelTest : StringSpec({
+
+    val testDispatcher = StandardTestDispatcher()
+
+    beforeTest {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    afterTest {
+        Dispatchers.resetMain()
+    }
 
     "Se logea de forma correcta" {
 
@@ -41,8 +55,10 @@ class LoginViewModelTest : StringSpec({
 
         runTest {
             viewModel.login { loginEjecutado = true }
+
             advanceUntilIdle()
         }
+
         loginEjecutado shouldBe true
         viewModel.uiState.value.error shouldBe null
         viewModel.uiState.value.loading shouldBe false
