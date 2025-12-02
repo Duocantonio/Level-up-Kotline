@@ -1,5 +1,6 @@
 package com.example.level_up.uiscreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -9,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.level_up.R
 import com.example.level_up.ui.components.NeonLogo
 import com.example.level_up.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
@@ -32,68 +35,86 @@ fun HomeScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                modifier = Modifier.background(Color.Black.copy(alpha = 0.8f))
+            ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
-                Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp), color = Color.Cyan)
+                Divider(modifier = Modifier.padding(horizontal = 16.dp), color = Color.Cyan.copy(alpha = 0.5f))
+
+                val navDrawerColors = NavigationDrawerItemDefaults.colors(
+                    selectedIconColor = Color.Cyan,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.Cyan,
+                    unselectedTextColor = Color.White,
+                    unselectedBadgeColor = Color.Magenta
+                )
 
                 // Enlaces principales
                 NavigationDrawerItem(
                     label = { Text("Perfil") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Profile.route) },
-                    icon = { Icon(Icons.Default.AccountCircle, contentDescription = "Perfil") }
+                    icon = { Icon(Icons.Default.AccountCircle, contentDescription = "Perfil") },
+                    colors = navDrawerColors
                 )
                 NavigationDrawerItem(
                     label = { Text("Activar/Desactivar") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Main.route) },
-                    icon = { Icon(Icons.Default.Check, contentDescription = "Activar/Desactivar") }
+                    icon = { Icon(Icons.Default.Check, contentDescription = "Activar/Desactivar") },
+                    colors = navDrawerColors
                 )
 
-                Divider(modifier = Modifier.padding(16.dp))
-                Text("Categorías", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(horizontal = 16.dp))
+                Divider(modifier = Modifier.padding(16.dp), color = Color.Cyan.copy(alpha = 0.5f))
+                Text("Categorías", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(horizontal = 16.dp), color = Color.Cyan)
 
                 // Enlaces de categorías
                 NavigationDrawerItem(
                     label = { Text("Juegos de Mesa") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.JuegosDeMesa.route) },
-                    icon = { Icon(Icons.Default.Casino, contentDescription = "Juegos de Mesa") }
+                    icon = { Icon(Icons.Default.Casino, contentDescription = "Juegos de Mesa") },
+                    colors = navDrawerColors
                 )
                 NavigationDrawerItem(
                     label = { Text("Periféricos") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Perifericos.route) },
-                    icon = { Icon(Icons.Default.Mouse, contentDescription = "Periféricos") }
+                    icon = { Icon(Icons.Default.Mouse, contentDescription = "Periféricos") },
+                    colors = navDrawerColors
                 )
                 NavigationDrawerItem(
                     label = { Text("Computadores") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Computadores.route) },
-                    icon = { Icon(Icons.Default.Laptop, contentDescription = "Computadores") }
+                    icon = { Icon(Icons.Default.Laptop, contentDescription = "Computadores") },
+                    colors = navDrawerColors
                 )
                 NavigationDrawerItem(
                     label = { Text("Consolas") },
                     selected = false,
                     onClick = { scope.launch { drawerState.close() }; navController.navigate(Screen.Consolas.route) },
-                    icon = { Icon(Icons.Default.VideogameAsset, contentDescription = "Consolas") }
+                    icon = { Icon(Icons.Default.VideogameAsset, contentDescription = "Consolas") },
+                    colors = navDrawerColors
                 )
             }
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(Color.Black, Color.Red),
-                        radius = 4000f // Radio grande para un efecto de viñeta suave
-                    )
-                )
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // 1. Imagen de fondo
+            Image(
+                painter = painterResource(id = R.drawable.fondo_pagina),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            // 2. Capa oscura para mejorar la legibilidad
+            Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.6f)))
+
+            // 3. Contenido de la pantalla
             Scaffold(
-                containerColor = Color.Transparent, // Fondo transparente para mostrar el degradado
+                containerColor = Color.Transparent, // Fondo transparente para mostrar la imagen de fondo
                 topBar = {
                     TopAppBar(
                         title = { Text("Página de Inicio", color = Color.Cyan) },

@@ -68,13 +68,13 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.Green,
-                    unfocusedTextColor = Color.Cyan,
-                    cursorColor = Color.White,
-                    focusedBorderColor = Color.Cyan,
-                    unfocusedBorderColor = Color.Magenta,
-                    focusedLabelColor = Color.Cyan,
-                    unfocusedLabelColor = Color.Magenta,
+                    focusedTextColor = Color.Cyan,
+                    unfocusedTextColor = Color.Green,
+                    cursorColor = Color.Cyan,
+                    focusedBorderColor = Color.Green,
+                    unfocusedBorderColor = Color.Cyan,
+                    focusedLabelColor = Color.Green,
+                    unfocusedLabelColor = Color.Cyan,
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -95,13 +95,13 @@ fun LoginScreen(
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.Green,
-                    unfocusedTextColor = Color.Cyan,
-                    cursorColor = Color.White,
-                    focusedBorderColor = Color.Cyan,
-                    unfocusedBorderColor = Color.Magenta,
-                    focusedLabelColor = Color.Cyan,
-                    unfocusedLabelColor = Color.Magenta,
+                    focusedTextColor = Color.Cyan,
+                    unfocusedTextColor = Color.Green,
+                    cursorColor = Color.Cyan,
+                    focusedBorderColor = Color.Green,
+                    unfocusedBorderColor = Color.Cyan,
+                    focusedLabelColor = Color.Green,
+                    unfocusedLabelColor = Color.Cyan,
                 )
             )
 
@@ -117,7 +117,8 @@ fun LoginScreen(
             Button(
                 onClick = { loginViewModel.login(onLoginSuccess) },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = uiState.correo.isNotBlank() && uiState.clave.isNotBlank()
+                enabled = uiState.correo.isNotBlank() && uiState.clave.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Cyan)
             ) {
                 Text("Entrar")
             }
