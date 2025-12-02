@@ -179,9 +179,7 @@ fun HomeScreen(
                     Button(onClick = { navController.navigate(Screen.Camera.route) }, modifier = buttonModifier, colors = neonButtonColors) {
                         Text("Ir a Cámara")
                     }
-                    Button(onClick = {navController.navigate(Screen.Post.route)}, modifier = buttonModifier, colors = neonButtonColors){
-                        Text("ir a post")
-                    }
+
                 }
             }
         }
