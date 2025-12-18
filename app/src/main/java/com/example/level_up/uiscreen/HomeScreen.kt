@@ -173,9 +173,6 @@ fun HomeScreen(
                     Button(onClick = { navController.navigate(Screen.Register.route) }, modifier = buttonModifier, colors = neonButtonColors) {
                         Text("Ir al Registro")
                     }
-                    Button(onClick = { navController.navigate(Screen.Resume.route) }, modifier = buttonModifier, colors = neonButtonColors) {
-                        Text("Ver Resumen")
-                    }
                     Button(onClick = { navController.navigate(Screen.Camera.route) }, modifier = buttonModifier, colors = neonButtonColors) {
                         Text("Ir a Cámara")
                     }
